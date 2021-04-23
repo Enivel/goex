@@ -64,6 +64,7 @@ var (
 	DASH    = Currency{"DASH", ""}
 	CRV     = Currency{"CRV", ""}
 	ALGO    = Currency{"ALGO", ""}
+	DOGE    = Currency{"DOGE",""}
 
 	//currency pair
 	BTC_KRW = CurrencyPair{CurrencyA: BTC, CurrencyB: KRW, AmountTickSize: 2, PriceTickSize: 1}
@@ -107,6 +108,7 @@ var (
 	DASH_USDT = CurrencyPair{CurrencyA: DASH, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
 	CRV_USDT  = CurrencyPair{CurrencyA: CRV, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 3}
 	ALGO_USDT = CurrencyPair{CurrencyA: ALGO, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 4}
+	DOGE_USDT = CurrencyPair{CurrencyA: DOGE, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 6}
 
 	XRP_EUR = CurrencyPair{CurrencyA: XRP, CurrencyB: EUR, AmountTickSize: 2, PriceTickSize: 4}
 
@@ -141,6 +143,7 @@ var (
 	NEO_ETH = CurrencyPair{CurrencyA: NEO, CurrencyB: ETH, AmountTickSize: 2, PriceTickSize: 4}
 	HSR_ETH = CurrencyPair{CurrencyA: HSR, CurrencyB: ETH, AmountTickSize: 2, PriceTickSize: 4}
 	LTC_ETH = CurrencyPair{CurrencyA: LTC, CurrencyB: ETH, AmountTickSize: 2, PriceTickSize: 4}
+
 
 	UNKNOWN_PAIR = CurrencyPair{CurrencyA: UNKNOWN, CurrencyB: UNKNOWN}
 )

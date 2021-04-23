@@ -53,6 +53,27 @@ const (
 	CLOSE_SELL            //平空
 )
 
+const (
+	ORDER_PRICE_TYPE_LIMIT = "limit"
+	ORDER_PRICE_TYPE_OPPONENT = "opponent"
+	ORDER_PRICE_TYPE_POST_ONLY = "post_only"
+	ORDER_PRICE_TYPE_OPTIMAL_5 = "optimal_5"
+	ORDER_PRICE_TYPE_OPTIMAL_10 = "optimal_10"
+	ORDER_PRICE_TYPE_OPTIMAL_20 = "optimal_20"
+	ORDER_PRICE_TYPE_OPTIMAL_IOC = "ioc"
+	ORDER_PRICE_TYPE_OPTIMAL_FOK = "fok"
+	ORDER_PRICE_TYPE_OPPONENT_IOC = "opponent_ioc"
+	ORDER_PRICE_TYPE_OPTIMAL_5_IOC = "optimal_5_ioc"
+	ORDER_PRICE_TYPE_OPTIMAL_10_IOC = "optimal_10_ioc"
+	ORDER_PRICE_TYPE_OPTIMAL_20_IOC = "optimal_20_ioc"
+	ORDER_PRICE_TYPE_OPPONENT_FOK = "opponent_fok"
+	ORDER_PRICE_TYPE_OPTIMAL_5_FOK = "optimal_5_fok"
+	ORDER_PRICE_TYPE_OPTIMAL_10_FOK = "optimal_10_fok"
+	ORDER_PRICE_TYPE_OPTIMAL_20_FOK = "optimal_20_fok"
+
+
+)
+
 type KlinePeriod int
 
 //k线周期
@@ -155,6 +176,7 @@ const (
 	CRYPTOPIA       = "cryptopia.co.nz"
 	HBDM            = "hbdm.com"
 	HBDM_SWAP       = "hbdm.com_swap"
+	HBDM_USDT_SWAP  = "hbdm.com_swap_usdt"
 	COINBENE        = "coinbene.com"
 	ATOP            = "a.top"
 	BITGET_SWAP     = "bitget_swap"
