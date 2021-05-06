@@ -21,6 +21,7 @@ type CurrencyPair struct {
 	CurrencyB      Currency
 	AmountTickSize int // 下单量精度
 	PriceTickSize  int //交易对价格精度
+	FaceValue float64 //合约单张面值
 }
 
 var (
@@ -88,11 +89,11 @@ var (
 	CRV_USD  = CurrencyPair{CurrencyA: CRV, CurrencyB: USD, AmountTickSize: 4, PriceTickSize: 3}
 	ALGO_USD = CurrencyPair{CurrencyA: ALGO, CurrencyB: USD, AmountTickSize: 4, PriceTickSize: 4}
 
-	BTC_USDT  = CurrencyPair{CurrencyA: BTC, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 1}
-	LTC_USDT  = CurrencyPair{CurrencyA: LTC, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
+	BTC_USDT  = CurrencyPair{CurrencyA: BTC, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 1,FaceValue: 0.001}
+	LTC_USDT  = CurrencyPair{CurrencyA: LTC, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2,FaceValue: 0.1}
 	BCH_USDT  = CurrencyPair{CurrencyA: BCH, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
 	ETC_USDT  = CurrencyPair{CurrencyA: ETC, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 3}
-	ETH_USDT  = CurrencyPair{CurrencyA: ETH, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
+	ETH_USDT  = CurrencyPair{CurrencyA: ETH, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2,FaceValue: 0.01}
 	BCD_USDT  = CurrencyPair{CurrencyA: BCD, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
 	NEO_USDT  = CurrencyPair{CurrencyA: NEO, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
 	EOS_USDT  = CurrencyPair{CurrencyA: EOS, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
@@ -108,7 +109,7 @@ var (
 	DASH_USDT = CurrencyPair{CurrencyA: DASH, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
 	CRV_USDT  = CurrencyPair{CurrencyA: CRV, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 3}
 	ALGO_USDT = CurrencyPair{CurrencyA: ALGO, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 4}
-	DOGE_USDT = CurrencyPair{CurrencyA: DOGE, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 6}
+	DOGE_USDT = CurrencyPair{CurrencyA: DOGE, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 6,FaceValue: 100}
 
 	XRP_EUR = CurrencyPair{CurrencyA: XRP, CurrencyB: EUR, AmountTickSize: 2, PriceTickSize: 4}
 

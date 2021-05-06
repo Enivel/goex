@@ -195,6 +195,7 @@ type FuturePosition struct {
 	ForceLiquPrice float64 //预估爆仓价
 	ShortPnlRatio  float64 //空仓收益率
 	LongPnlRatio   float64 //多仓收益率
+	LastPrice      float64
 }
 
 type HistoricalFunding struct {

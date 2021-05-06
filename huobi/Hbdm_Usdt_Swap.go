@@ -20,6 +20,8 @@ const (
 	usdtSwapgetOrderInfoApiPath    = "/linear-swap-api/v1/swap_order_info"
 	usdtSwaplightningClosePosition = "/linear-swap-api/v1/swap_lightning_close_position"
 	usdtSwapCancelOrderApiPath     = "/linear-swap-api/v1/swap_cancel"
+	usdtSwapGetPositionApiPath     = "/linear-swap-api/v1/swap_position_info"
+	usdtSwapCancelAllOrderApiPath     = "/linear-swap-api/v1/swap_cancelall"
 )
 
 func NewHbdmUsdtSwap(c *APIConfig) *HbdmUsdtSwap {
@@ -130,71 +132,96 @@ func (swap *HbdmUsdtSwap) FutureCancelOrder(currencyPair CurrencyPair, orderId s
 	return true, nil
 }
 
+func (swap *HbdmUsdtSwap) FutureCancelAll(currencyPair CurrencyPair, openType int) (bool, error) {
+	param := url.Values{}
+	param.Set("contract_code", currencyPair.ToSymbol("-"))
+	if openType != 0{
+		direction, offset := swap.base.adaptOpenType(openType)
+		param.Set("direction", direction)
+		param.Set("offset", offset)
+	}
+
+	var cancelResponse struct {
+		Errors []string `json:"errors"`
+		Success []string `json:"success"`
+	}
+
+	err := swap.base.doRequest(usdtSwapCancelAllOrderApiPath, &param, &cancelResponse)
+	if err != nil {
+		return false, err
+	}
+
+	if len(cancelResponse.Errors) > 0 {
+		return false, errors.New(cancelResponse.Errors[0])
+	}
+	return true, nil
+}
+
 //
-//func (swap *HbdmUsdtSwap) GetFuturePosition(currencyPair CurrencyPair, contractType string) ([]FuturePosition, error) {
-//	param := url.Values{}
-//	param.Set("contract_code", currencyPair.ToSymbol("-"))
-//
-//	var (
-//		tempPositionMap  map[string]*FuturePosition
-//		futuresPositions []FuturePosition
-//		positionResponse []struct {
-//			Symbol         string
-//			ContractCode   string  `json:"contract_code"`
-//			Volume         float64 `json:"volume"`
-//			Available      float64 `json:"available"`
-//			CostOpen       float64 `json:"cost_open"`
-//			CostHold       float64 `json:"cost_hold"`
-//			ProfitUnreal   float64 `json:"profit_unreal"`
-//			ProfitRate     float64 `json:"profit_rate"`
-//			Profit         float64 `json:"profit"`
-//			PositionMargin float64 `json:"position_margin"`
-//			LeverRate      float64 `json:"lever_rate"`
-//			Direction      string  `json:"direction"`
-//		}
-//	)
-//
-//	err := swap.base.doRequest(getPositionApiPath, &param, &positionResponse)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	futuresPositions = make([]FuturePosition, 0, 2)
-//	tempPositionMap = make(map[string]*FuturePosition, 2)
-//
-//	for _, pos := range positionResponse {
-//		if tempPositionMap[pos.ContractCode] == nil {
-//			tempPositionMap[pos.ContractCode] = new(FuturePosition)
-//		}
-//		switch pos.Direction {
-//		case "sell":
-//			tempPositionMap[pos.ContractCode].ContractType = pos.ContractCode
-//			tempPositionMap[pos.ContractCode].Symbol = NewCurrencyPair3(pos.ContractCode, "-")
-//			tempPositionMap[pos.ContractCode].SellAmount = pos.Volume
-//			tempPositionMap[pos.ContractCode].SellAvailable = pos.Available
-//			tempPositionMap[pos.ContractCode].SellPriceAvg = pos.CostOpen
-//			tempPositionMap[pos.ContractCode].SellPriceCost = pos.CostHold
-//			tempPositionMap[pos.ContractCode].SellProfitReal = pos.ProfitRate
-//			tempPositionMap[pos.ContractCode].SellProfit = pos.Profit
-//		case "buy":
-//			tempPositionMap[pos.ContractCode].ContractType = pos.ContractCode
-//			tempPositionMap[pos.ContractCode].Symbol = NewCurrencyPair3(pos.ContractCode, "-")
-//			tempPositionMap[pos.ContractCode].BuyAmount = pos.Volume
-//			tempPositionMap[pos.ContractCode].BuyAvailable = pos.Available
-//			tempPositionMap[pos.ContractCode].BuyPriceAvg = pos.CostOpen
-//			tempPositionMap[pos.ContractCode].BuyPriceCost = pos.CostHold
-//			tempPositionMap[pos.ContractCode].BuyProfitReal = pos.ProfitRate
-//			tempPositionMap[pos.ContractCode].BuyProfit = pos.Profit
-//		}
-//	}
-//
-//	for _, pos := range tempPositionMap {
-//		futuresPositions = append(futuresPositions, *pos)
-//	}
-//
-//	return futuresPositions, nil
-//}
-//
+func (swap *HbdmUsdtSwap) GetFuturePosition(currencyPair CurrencyPair) ([]FuturePosition, error) {
+	param := url.Values{}
+	param.Set("contract_code", currencyPair.ToSymbol("-"))
+
+	var (
+		tempPositionMap  map[string]*FuturePosition
+		futuresPositions []FuturePosition
+		positionResponse []struct {
+			Symbol         string
+			ContractCode   string  `json:"contract_code"`
+			Volume         float64 `json:"volume"`
+			Available      float64 `json:"available"`
+			CostOpen       float64 `json:"cost_open"`
+			CostHold       float64 `json:"cost_hold"`
+			ProfitUnreal   float64 `json:"profit_unreal"`
+			ProfitRate     float64 `json:"profit_rate"`
+			Profit         float64 `json:"profit"`
+			PositionMargin float64 `json:"position_margin"`
+			LeverRate      float64 `json:"lever_rate"`
+			Direction      string  `json:"direction"`
+		}
+	)
+
+	err := swap.base.doRequest(usdtSwapGetPositionApiPath, &param, &positionResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	futuresPositions = make([]FuturePosition, 0, 2)
+	tempPositionMap = make(map[string]*FuturePosition, 2)
+
+	for _, pos := range positionResponse {
+		if tempPositionMap[pos.ContractCode] == nil {
+			tempPositionMap[pos.ContractCode] = new(FuturePosition)
+		}
+		switch pos.Direction {
+		case "sell":
+			tempPositionMap[pos.ContractCode].ContractType = pos.ContractCode
+			tempPositionMap[pos.ContractCode].Symbol = NewCurrencyPair3(pos.ContractCode, "-")
+			tempPositionMap[pos.ContractCode].SellAmount = pos.Volume
+			tempPositionMap[pos.ContractCode].SellAvailable = pos.Available
+			tempPositionMap[pos.ContractCode].SellPriceAvg = pos.CostOpen
+			tempPositionMap[pos.ContractCode].SellPriceCost = pos.CostHold
+			tempPositionMap[pos.ContractCode].SellProfitReal = pos.ProfitRate
+			tempPositionMap[pos.ContractCode].SellProfit = pos.Profit
+		case "buy":
+			tempPositionMap[pos.ContractCode].ContractType = pos.ContractCode
+			tempPositionMap[pos.ContractCode].Symbol = NewCurrencyPair3(pos.ContractCode, "-")
+			tempPositionMap[pos.ContractCode].BuyAmount = pos.Volume
+			tempPositionMap[pos.ContractCode].BuyAvailable = pos.Available
+			tempPositionMap[pos.ContractCode].BuyPriceAvg = pos.CostOpen
+			tempPositionMap[pos.ContractCode].BuyPriceCost = pos.CostHold
+			tempPositionMap[pos.ContractCode].BuyProfitReal = pos.ProfitRate
+			tempPositionMap[pos.ContractCode].BuyProfit = pos.Profit
+		}
+	}
+
+	for _, pos := range tempPositionMap {
+		futuresPositions = append(futuresPositions, *pos)
+	}
+
+	return futuresPositions, nil
+}
+
 func (swap *HbdmUsdtSwap) GetFutureOrder(orderId string, currencyPair CurrencyPair) (*FutureOrder, error) {
 	var (
 		orderInfoResponse []OrderInfo
