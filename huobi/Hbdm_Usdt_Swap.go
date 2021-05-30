@@ -80,7 +80,7 @@ func (swap *HbdmUsdtSwap) GetAccountInfo(currencyPair ...CurrencyPair) (*FutureA
 
 }
 
-func (swap *HbdmUsdtSwap) PlaceFutureOrder(currencyPair CurrencyPair, price float64, amount float64, openType int, orderPriceType string, leverRate int) (string, error) {
+func (swap *HbdmUsdtSwap) PlaceFutureOrder(currencyPair CurrencyPair, price float64, amount float64, openType int, orderPriceType OrderPriceType, leverRate int) (string, error) {
 	param := url.Values{}
 	param.Set("contract_code", currencyPair.ToSymbol("-"))
 	param.Set("client_order_id", fmt.Sprint(time.Now().UnixNano()))
@@ -93,7 +93,7 @@ func (swap *HbdmUsdtSwap) PlaceFutureOrder(currencyPair CurrencyPair, price floa
 	param.Set("offset", offset)
 	logger.Info(direction, offset)
 
-	param.Set("order_price_type", orderPriceType)
+	param.Set("order_price_type", string(orderPriceType))
 
 	var orderResponse struct {
 		OrderId       string `json:"order_id_str"`
@@ -279,6 +279,78 @@ func (swap *HbdmUsdtSwap) LightningClose(currencyPair CurrencyPair, volume float
 	}
 
 	return orderResponse.OrderId, nil
+}
+func (dm *HbdmUsdtSwap) GetKlineRecords(currency CurrencyPair, period KlinePeriod, size int, opt ...OptionalParameter) ([]FutureKline, error) {
+	symbol :=  currency.ToSymbol("-")
+	periodS := dm.adaptKLinePeriod(period)
+	url := fmt.Sprintf("%s/linear-swap-ex/market/history/kline?contract_code=%s&period=%s&size=%d", dm.c.Endpoint, symbol, periodS, size)
+	var ret struct {
+		BaseResponse
+		Data []struct {
+			Id     int64   `json:"id"`
+			Amount float64 `json:"amount"`
+			Close  float64 `json:"close"`
+			High   float64 `json:"high"`
+			Low    float64 `json:"low"`
+			Open   float64 `json:"open"`
+			Vol    float64 `json:"vol"`
+		} `json:"data"`
+	}
+
+	err := HttpGet4(dm.c.HttpClient, url, nil, &ret)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.Status != "ok" {
+		return nil, errors.New(ret.ErrMsg)
+	}
+
+	var klines []FutureKline
+	for i := len(ret.Data) - 1; i >= 0; i-- {
+		d := ret.Data[i]
+		klines = append(klines, FutureKline{
+			Kline: &Kline{
+				Pair:      currency,
+				Vol:       d.Vol,
+				Open:      d.Open,
+				Close:     d.Close,
+				High:      d.High,
+				Low:       d.Low,
+				Timestamp: d.Id},
+			Vol2: d.Vol})
+	}
+
+	return klines, nil
+}
+
+
+
+func (dm *HbdmUsdtSwap) adaptKLinePeriod(period KlinePeriod) string {
+	switch period {
+	case KLINE_PERIOD_1MIN:
+		return "1min"
+	case KLINE_PERIOD_5MIN:
+		return "5min"
+	case KLINE_PERIOD_15MIN:
+		return "15min"
+	case KLINE_PERIOD_30MIN:
+		return "30min"
+	case KLINE_PERIOD_60MIN:
+		return "60min"
+	case KLINE_PERIOD_1H:
+		return "1h"
+	case KLINE_PERIOD_4H:
+		return "4h"
+	case KLINE_PERIOD_1DAY:
+		return "1day"
+	case KLINE_PERIOD_1WEEK:
+		return "1week"
+	case KLINE_PERIOD_1MONTH:
+		return "1mon"
+	default:
+		return "1day"
+	}
 }
 
 //

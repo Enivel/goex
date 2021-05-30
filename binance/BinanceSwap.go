@@ -349,18 +349,45 @@ func (bs *BinanceSwap) PlaceFutureOrder2(currencyPair CurrencyPair, contractType
 	params.Set("quantity", amount)
 	params.Set("newClientOrderId", fOrder.ClientOid)
 
+	//switch openType {
+	//case OPEN_BUY, CLOSE_SELL:
+	//	params.Set("side", "BUY")
+	//	params.Set("positionSide","LONG")
+	//case OPEN_SELL, CLOSE_BUY:
+	//	params.Set("side", "SELL")
+	//	params.Set("positionSide","SHORT")
+	//}
+
 	switch openType {
-	case OPEN_BUY, CLOSE_SELL:
+	case OPEN_BUY:
 		params.Set("side", "BUY")
-	case OPEN_SELL, CLOSE_BUY:
+		params.Set("positionSide","LONG")
+	case CLOSE_BUY:
 		params.Set("side", "SELL")
+		params.Set("positionSide","LONG")
+	case OPEN_SELL:
+		params.Set("side", "SELL")
+		params.Set("positionSide","SHORT")
+	case CLOSE_SELL:
+		params.Set("side", "BUY")
+		params.Set("positionSide","SHORT")
 	}
-	if matchPrice == 0 {
+
+
+	switch matchPrice {
+	case 0:
 		params.Set("type", "LIMIT")
 		params.Set("price", price)
 		params.Set("timeInForce", "GTC")
-	} else {
+	case 1:
 		params.Set("type", "MARKET")
+	case 2:
+		params.Set("type","TAKE_PROFIT")
+		params.Set("stopPrice",price)
+		params.Set("price",price)
+	case 3:
+		params.Set("type", "TRAILING_STOP_MARKET")
+		params.Set("callbackRate", "0.6")
 	}
 
 	bs.buildParamsSigned(&params)
@@ -811,4 +838,18 @@ func (bs *BinanceSwap) GetServerTime() (int64, error) {
 
 func (bs *BinanceSwap) adaptCurrencyPair(pair CurrencyPair) CurrencyPair {
 	return pair.AdaptUsdToUsdt()
+}
+
+func (bn *BinanceSwap) GetExchangeInfo() (*ExchangeInfo, error) {
+	resp, err := HttpGet5(bn.httpClient, bn.apiV1+"exchangeInfo", nil)
+	if err != nil {
+		return nil, err
+	}
+	info := &ExchangeInfo{}
+	err = json.Unmarshal(resp, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return info, nil
 }

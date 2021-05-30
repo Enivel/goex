@@ -37,7 +37,8 @@ func NewHbdmSwapWs() *HbdmSwapWs {
 func NewHbdmLinearSwapWs() *HbdmSwapWs {
 	ws := &HbdmSwapWs{WsBuilder: NewWsBuilder()}
 	ws.WsBuilder = ws.WsBuilder.
-		WsUrl("wss://api.hbdm.com/linear-swap-ws").
+		//WsUrl("wss://api.hbdm.com/linear-swap-ws").
+		WsUrl("wss://api.hbdm.vn/linear-swap-ws").
 		//ProxyUrl("socks5://127.0.0.1:1080").
 		AutoReconnect().
 		DecompressFunc(GzipDecompress).

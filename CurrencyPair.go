@@ -66,6 +66,7 @@ var (
 	CRV     = Currency{"CRV", ""}
 	ALGO    = Currency{"ALGO", ""}
 	DOGE    = Currency{"DOGE",""}
+	SHIB    = Currency{"1000SHIB",""}
 
 	//currency pair
 	BTC_KRW = CurrencyPair{CurrencyA: BTC, CurrencyB: KRW, AmountTickSize: 2, PriceTickSize: 1}
@@ -110,6 +111,7 @@ var (
 	CRV_USDT  = CurrencyPair{CurrencyA: CRV, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 3}
 	ALGO_USDT = CurrencyPair{CurrencyA: ALGO, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 4}
 	DOGE_USDT = CurrencyPair{CurrencyA: DOGE, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 6,FaceValue: 100}
+    SHIB_USDT = CurrencyPair{CurrencyA: SHIB, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 6,FaceValue: 100}
 
 	XRP_EUR = CurrencyPair{CurrencyA: XRP, CurrencyB: EUR, AmountTickSize: 2, PriceTickSize: 4}
 
