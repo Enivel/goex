@@ -280,7 +280,7 @@ func (swap *HbdmUsdtSwap) LightningClose(currencyPair CurrencyPair, volume float
 
 	return orderResponse.OrderId, nil
 }
-func (dm *HbdmUsdtSwap) GetKlineRecords(currency CurrencyPair, period KlinePeriod, size int, opt ...OptionalParameter) ([]FutureKline, error) {
+func (dm *HbdmUsdtSwap) GetKlineRecords(currency CurrencyPair, period KlinePeriod, size int, opt ...OptionalParameter) ([]Kline, error) {
 	symbol :=  currency.ToSymbol("-")
 	periodS := dm.adaptKLinePeriod(period)
 	url := fmt.Sprintf("%s/linear-swap-ex/market/history/kline?contract_code=%s&period=%s&size=%d", dm.c.Endpoint, symbol, periodS, size)
@@ -306,19 +306,17 @@ func (dm *HbdmUsdtSwap) GetKlineRecords(currency CurrencyPair, period KlinePerio
 		return nil, errors.New(ret.ErrMsg)
 	}
 
-	var klines []FutureKline
+	var klines []Kline
 	for i := len(ret.Data) - 1; i >= 0; i-- {
 		d := ret.Data[i]
-		klines = append(klines, FutureKline{
-			Kline: &Kline{
-				Pair:      currency,
-				Vol:       d.Vol,
-				Open:      d.Open,
-				Close:     d.Close,
-				High:      d.High,
-				Low:       d.Low,
-				Timestamp: d.Id},
-			Vol2: d.Vol})
+		klines = append(klines, Kline{
+			Pair:      currency,
+			Vol:       d.Vol,
+			Open:      d.Open,
+			Close:     d.Close,
+			High:      d.High,
+			Low:       d.Low,
+			Timestamp: d.Id})
 	}
 
 	return klines, nil
