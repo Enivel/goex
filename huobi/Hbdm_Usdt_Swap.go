@@ -280,10 +280,15 @@ func (swap *HbdmUsdtSwap) LightningClose(currencyPair CurrencyPair, volume float
 
 	return orderResponse.OrderId, nil
 }
-func (dm *HbdmUsdtSwap) GetKlineRecords(currency CurrencyPair, period KlinePeriod, size int, opt ...OptionalParameter) ([]Kline, error) {
+func (dm *HbdmUsdtSwap) GetKlineRecords(currency CurrencyPair, period KlinePeriod, size int, from, to time.Time) ([]Kline, error) {
 	symbol :=  currency.ToSymbol("-")
 	periodS := dm.adaptKLinePeriod(period)
 	url := fmt.Sprintf("%s/linear-swap-ex/market/history/kline?contract_code=%s&period=%s&size=%d", dm.c.Endpoint, symbol, periodS, size)
+
+	if from != (time.Time{}){
+		url = fmt.Sprintf("%s/linear-swap-ex/market/history/kline?contract_code=%s&period=%s&from=%d&to=%d", dm.c.Endpoint, symbol, periodS, from.Unix(),to.Unix())
+	}
+
 	var ret struct {
 		BaseResponse
 		Data []struct {
