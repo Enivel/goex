@@ -361,18 +361,17 @@ func (bs *BinanceSwap) PlaceFutureOrder2(currencyPair CurrencyPair, contractType
 	switch openType {
 	case OPEN_BUY:
 		params.Set("side", "BUY")
-		params.Set("positionSide","LONG")
+		params.Set("positionSide", "LONG")
 	case CLOSE_BUY:
 		params.Set("side", "SELL")
-		params.Set("positionSide","LONG")
+		params.Set("positionSide", "LONG")
 	case OPEN_SELL:
 		params.Set("side", "SELL")
-		params.Set("positionSide","SHORT")
+		params.Set("positionSide", "SHORT")
 	case CLOSE_SELL:
 		params.Set("side", "BUY")
-		params.Set("positionSide","SHORT")
+		params.Set("positionSide", "SHORT")
 	}
-
 
 	switch matchPrice {
 	case 0:
@@ -382,9 +381,9 @@ func (bs *BinanceSwap) PlaceFutureOrder2(currencyPair CurrencyPair, contractType
 	case 1:
 		params.Set("type", "MARKET")
 	case 2:
-		params.Set("type","TAKE_PROFIT")
-		params.Set("stopPrice",price)
-		params.Set("price",price)
+		params.Set("type", "TAKE_PROFIT")
+		params.Set("stopPrice", price)
+		params.Set("price", price)
 	case 3:
 		params.Set("type", "TRAILING_STOP_MARKET")
 		params.Set("callbackRate", "0.6")
@@ -785,10 +784,10 @@ func (bs *BinanceSwap) GetDeliveryTime() (int, int, int, int) {
 	panic("not supported.")
 }
 
-func (bs *BinanceSwap) GetKlineRecords(contractType string, currency CurrencyPair, period KlinePeriod, size int, opt ...OptionalParameter) ([]FutureKline, error) {
-	if contractType == SWAP_CONTRACT {
-		return bs.f.GetKlineRecords(contractType, currency.AdaptUsdtToUsd(), period, size, opt...)
-	}
+func (bs *BinanceSwap) GetKlineRecords(contractType string, currency CurrencyPair, period KlinePeriod, size int, opt ...OptionalParameter) ([]Kline, error) {
+	//if contractType == SWAP_CONTRACT {
+	//	return bs.f.GetKlineRecords(contractType, currency.AdaptUsdtToUsd(), period, size, opt...)
+	//}
 
 	if contractType != SWAP_USDT_CONTRACT {
 		return nil, errors.New("contract is error,please incoming SWAP_CONTRACT or SWAP_USDT_CONTRACT")
@@ -803,11 +802,12 @@ func (bs *BinanceSwap) GetKlineRecords(contractType string, currency CurrencyPai
 	MergeOptionalParameter(&params, opt...)
 
 	klineUrl := bs.apiV1 + KLINE_URI + "?" + params.Encode()
+
 	klines, err := HttpGet3(bs.httpClient, klineUrl, nil)
 	if err != nil {
 		return nil, err
 	}
-	var klineRecords []FutureKline
+	var klineRecords []Kline
 
 	for _, _record := range klines {
 		r := Kline{Pair: currency}
@@ -819,7 +819,7 @@ func (bs *BinanceSwap) GetKlineRecords(contractType string, currency CurrencyPai
 		r.Close = ToFloat64(record[4])
 		r.Vol = ToFloat64(record[5])
 
-		klineRecords = append(klineRecords, FutureKline{Kline: &r})
+		klineRecords = append(klineRecords, r)
 	}
 
 	return klineRecords, nil
@@ -834,6 +834,10 @@ func (bs *BinanceSwap) GetServerTime() (int64, error) {
 	stime := int64(ToInt(respmap["serverTime"]))
 
 	return stime, nil
+}
+
+func (bs *BinanceSwap) OpenInterestHist(contractType string, period KlinePeriod, starTime, endTime time.Time) {
+
 }
 
 func (bs *BinanceSwap) adaptCurrencyPair(pair CurrencyPair) CurrencyPair {

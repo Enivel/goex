@@ -378,6 +378,8 @@ func (bn *Binance) GetAccount() (*Account, error) {
 	bn.buildParamsSigned(&params)
 	path := bn.apiV3 + ACCOUNT_URI + params.Encode()
 	respmap, err := HttpGet2(bn.httpClient, path, map[string]string{"X-MBX-APIKEY": bn.accessKey})
+	fmt.Printf("aaaa %+v %v", respmap)
+
 	if err != nil {
 		return nil, err
 	}
@@ -672,4 +674,8 @@ func (bn *Binance) adaptOrder(currencyPair CurrencyPair, orderMap map[string]int
 		OrderTime:    ToInt(orderMap["time"]),
 		FinishedTime: ToInt64(orderMap["updateTime"]),
 	}
+}
+
+func (bn *Binance) genTimeRange(startTime, endTime time.Time) {
+
 }

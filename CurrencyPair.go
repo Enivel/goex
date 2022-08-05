@@ -41,6 +41,7 @@ var (
 	BCX     = Currency{"BCX", ""}
 	LTC     = Currency{"LTC", ""}
 	ETH     = Currency{"ETH", ""}
+	REN     = Currency{"REN", ""}
 	ETC     = Currency{"ETC", ""}
 	EOS     = Currency{"EOS", ""}
 	BTS     = Currency{"BTS", ""}
@@ -94,7 +95,8 @@ var (
 	LTC_USDT  = CurrencyPair{CurrencyA: LTC, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2,FaceValue: 0.1}
 	BCH_USDT  = CurrencyPair{CurrencyA: BCH, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
 	ETC_USDT  = CurrencyPair{CurrencyA: ETC, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 3}
-	ETH_USDT  = CurrencyPair{CurrencyA: ETH, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2,FaceValue: 0.01}
+	ETH_USDT  = CurrencyPair{CurrencyA: ETH, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 2,FaceValue: 0.01}
+	REN_USDT  = CurrencyPair{CurrencyA: REN, CurrencyB: USDT, AmountTickSize: 3, PriceTickSize: 5,FaceValue: 0.01}
 	BCD_USDT  = CurrencyPair{CurrencyA: BCD, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
 	NEO_USDT  = CurrencyPair{CurrencyA: NEO, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}
 	EOS_USDT  = CurrencyPair{CurrencyA: EOS, CurrencyB: USDT, AmountTickSize: 2, PriceTickSize: 2}

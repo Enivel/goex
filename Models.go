@@ -264,6 +264,62 @@ type DepositWithdrawHistory struct {
 	Timestamp    time.Time `json:"timestamp"`
 }
 
+// InterestHist 合约持仓量
+type InterestHist struct {
+	Pair CurrencyPair `json:"pair"`
+	OpenInterest float64 `json:"openInterest"`
+	OpenInterestValue float64 `json:"openInterestValue"`
+	Timestamp time.Time `json:"timestamp"`
+}
+
+// TopLongShortAccountRatio 大户账户数多空比
+type TopLongShortAccountRatio struct {
+	Pair CurrencyPair `json:"pair"`
+	LongShortRatio float64 `json:"longShortRatio"`
+	LongAccount float64 `json:"longAccount"`
+	ShortAccount float64 `json:"shortAccount"`
+	Timestamp time.Time `json:"timestamp"`
+}
+
+// TopLongShortPositionRatio 大户持仓量多空比
+type TopLongShortPositionRatio struct {
+	Pair CurrencyPair `json:"pair"`
+	LongShortRatio float64 `json:"longShortRatio"`
+	LongPosition float64 `json:"longPosition"`
+	ShortPosition float64 `json:"shortPosition"`
+	Timestamp time.Time `json:"timestamp"`
+}
+
+// GlobalLongShortAccountRatio 多空持仓人数比
+type GlobalLongShortAccountRatio struct {
+	Pair CurrencyPair `json:"pair"`
+	LongShortRatio float64 `json:"longShortRatio"`
+	LongAccount float64 `json:"longAccount"`
+	ShortAccount float64 `json:"shortAccount"`
+	Timestamp time.Time `json:"timestamp"`
+}
+
+// TakerBuySellVol 合约主动买卖量
+type TakerBuySellVol struct {
+	Pair CurrencyPair `json:"pair"`
+	TakerBuyVol int `json:"takerBuyVol"`
+	TakerSellVol int `json:"takerSellVol"`
+	TakerBuyVolValue float64 `json:"takerBuyVolValue"`
+	TakerSellVolValue float64 `json:"takerSellVolValue"`
+	Timestamp time.Time `json:"timestamp"`
+}
+
+// Basis 基差
+type Basis struct {
+	Pair CurrencyPair `json:"pair"`
+	FuturesPrice float64 `json:"futuresPrice"`
+	IndexPrice float64 `json:"indexPrice"`
+	Basis float64 `json:"basis"`
+	BasisRate float64 `json:"basisRate"`
+	Timestamp time.Time `json:"timestamp"`
+}
+
+
 type OptionalParameter map[string]interface{}
 
 func (optional OptionalParameter) Optional(name string, value interface{}) OptionalParameter {

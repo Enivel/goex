@@ -14,7 +14,7 @@ var bs = NewBinanceSwap(&goex.APIConfig{
 	HttpClient: &http.Client{
 		Transport: &http.Transport{
 			Proxy: func(req *http.Request) (*url.URL, error) {
-				return url.Parse("socks5://127.0.0.1:1080")
+				return url.Parse("socks5://127.0.0.1:7890")
 				return nil, nil
 			},
 			Dial: (&net.Dialer{
@@ -40,8 +40,7 @@ func TestBinanceSwap_GetFutureIndex(t *testing.T) {
 }
 
 func TestBinanceSwap_GetKlineRecords(t *testing.T) {
-	kline, err := bs.GetKlineRecords("", goex.BTC_USDT, goex.KLINE_PERIOD_4H, 1, 0)
-	t.Log(err, kline[0].Kline)
+
 }
 
 func TestBinanceSwap_GetTrades(t *testing.T) {
